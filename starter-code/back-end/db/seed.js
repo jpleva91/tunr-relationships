@@ -1,13 +1,45 @@
 var DB = require("../models").models;
 
- var artistCreate = function() {
+var lucySongs = [
+     {
+          title: "O sole mio",
+          duration: "3:21",
+          date_of_release: "1990",
+          album_title: "Three Tenors in Concert",
+          artistId: ""
+     },
+     {
+          title: "Nessun dorma",
+          duration: "3:21",
+          date_of_release: "1990",
+          album_title: "Three Tenors in Concert",
+          artistId: ""
+     }
+];
+
+ var adCreate = function(manager) {
+     return DB.Ad.create({
+     headline: 'Calling All Squares!',
+     url: 'http://i0.kym-cdn.com/entries/icons/mobile/000/005/608/nyan-cat-01-625x450.jpg',
+     managerId: manager.id
+     });
+ };
+
+ var artistCreate = function(manager) {
  	return DB.Artist.create({
      name: 'Luciano Pavarotti',
      photoUrl: 'http://img.informador.com.mx/biblioteca/imagen/677x508/811/810055.jpg',
      nationality: 'Italiano',
      instrument: 'Voice',
-     home_address: '1 Strada Roma'
-   });
+     home_address: '1 Strada Roma',
+     managerId: manager.id
+     })
+     .then(function(artist) {
+          lucySongs.forEach(function(song) {
+               song.artistId = artist.id;
+          });
+          DB.Song.bulkCreate(lucySongs);
+     });
  };
  
  var managerCreate = function() {
@@ -16,7 +48,11 @@ var DB = require("../models").models;
      email: 'rbobby@gmail.com',
      office_number: '516-877-0304',
      cell_phone_number: '718-989-1231'
- 	});
+ 	})
+     .then(function(manager) {
+          artistCreate(manager);
+          adCreate(manager);
+     });
  };
  
  var songCreate = function() {
@@ -28,8 +64,7 @@ var DB = require("../models").models;
  	});
  };
  
- artistCreate()
- .then(managerCreate)
+managerCreate()
  .then(songCreate)
  .then(function() {
  	process.exit();

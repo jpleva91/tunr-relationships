@@ -1,6 +1,6 @@
 <h2>New Artist</h2>
 
-<form (ngSubmit)="saveArtist(newArtist)">
+<form (ngSubmit)="saveArtist(newArtist)" class="container">
   <label for="name">Name:</label>
   <input name="name" [(ngModel)]="newArtist.name">
 
@@ -16,5 +16,5 @@
   <label for="home_address">Home Address:</label>
   <input name="home_address" [(ngModel)]="newArtist.home_address">
 
-  <input type="submit" value="Create">
+  <input class="btn btn-success" type="submit" value="Create">
 </form>
